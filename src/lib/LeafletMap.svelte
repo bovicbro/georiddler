@@ -26,14 +26,12 @@
 	});
 </script>
 
-<main>
-	<div bind:this={mapElement} />
-</main>
+<div bind:this={mapElement} />
 
 <style>
 	@import 'leaflet/dist/leaflet.css';
-	main div {
-		height: 100vh;
-		width: 100vw;
+	div {
+		height: 100%;
+		width: 100%;
 	}
 </style>
