@@ -3,6 +3,19 @@
 	import Button from '../components/Button.svelte';
 	import type { Area, UserGuess } from './gameTypes';
 	import { createUserGuess } from './gameTypes';
+	import { fade } from 'svelte/transition';
+
+	const resetStatus = () => {
+		return {
+			riddle: '',
+			riddleId: '',
+			guessedCorrect: false,
+			numberOfGuesses: 0,
+			showInstructions: false
+		};
+	};
+
+	let status = resetStatus();
 
 	let map: LeafletMap;
 	let zoomlevel = 0;
@@ -16,8 +29,6 @@
 			long: 0
 		}
 	};
-
-	const riddleId = '1';
 
 	const setArea = (a: Area) => {
 		area = a;
@@ -35,6 +46,14 @@
 		}
 	};
 
+	const toggleInstructions = () => {
+		if (status.showInstructions) {
+			status.showInstructions = false;
+		} else {
+			status.showInstructions = true;
+		}
+	};
+
 	const submitGuess = async (userGuess: UserGuess) => {
 		const response = await fetch('/riddle', {
 			method: 'POST',
@@ -43,11 +62,25 @@
 			},
 			body: JSON.stringify({ guess: userGuess })
 		});
-		console.log(response.body);
+		const result = await response.json();
+		status.numberOfGuesses++;
+		if (result === 1) {
+			status.guessedCorrect = true;
+		} else {
+			status.guessedCorrect = false;
+		}
 	};
 
 	const getCurrentUserGuest = (): UserGuess => {
-		return createUserGuess(area, riddleId) as UserGuess;
+		return createUserGuess(area, status.riddleId) as UserGuess;
+	};
+
+	const getRiddle = async () => {
+		const response = await fetch('/riddle');
+		const result = await response.json();
+		status = resetStatus();
+		status.riddle = result.riddle;
+		status.riddleId = result.riddleId;
 	};
 </script>
 
@@ -58,22 +91,35 @@
 <section>
 	<div class="container">
 		<div class="menu">
-			<p>
-				Instructions: You get a riddle, the answer to the riddle is a place on earth. Locate the
-				place so that it is inside your current view of the map an click "Guess". If the answer to
-				the riddle is inside your view port, you get a point. zoom: {allowedZoom(zoomlevel)}
-				area: {JSON.stringify(area)}
-			</p>
-			<div class="buttons">
-				<Button text="New riddle" click={() => {}} />
-				<Button text="Instructions" click={() => {}} />
-				{#if allowedZoom(zoomlevel) === 'true'}
-					<Button text="Guess" click={() => submitGuess(getCurrentUserGuest())} />
+			{#if status.showInstructions}
+				<p>
+					Instructions: You get a riddle, the answer to the riddle is a place on earth. Locate the
+					place so that it is inside your current view of the map an click "Guess". If the answer to
+					the riddle is inside your view port, you get a point.
+				</p>
+			{/if}
+			<p>Riddle: {status.riddle}</p>
+			{#if status.numberOfGuesses > 0}
+				{#if status.guessedCorrect === true}
+					<p class="correct">✅ Correct!</p>
+				{:else}
+					<p class="error">❌ Incorrect!</p>
 				{/if}
+			{/if}
+			<div class="buttons">
+				<Button text="New riddle" click={getRiddle} />
+				<Button text="Instructions" click={() => toggleInstructions()} />
 			</div>
 		</div>
-		<div class="map">
-			<LeafletMap bind:this={map} setZoom={setZoomlevel} updateArea={setArea} />
+		<div class="mapContainer">
+			{#if allowedZoom(zoomlevel) === 'true'}
+				<div transition:fade={{ duration: 250 }} class="mapGridContent overlapButton">
+					<Button big={true} text="Guess" click={() => submitGuess(getCurrentUserGuest())} />
+				</div>
+			{/if}
+			<div class="mapGridContent map">
+				<LeafletMap bind:this={map} setZoom={setZoomlevel} updateArea={setArea} />
+			</div>
 		</div>
 	</div>
 </section>
@@ -81,6 +127,20 @@
 <style>
 	p {
 		text-align: center;
+	}
+	.overlapButton {
+		z-index: 2;
+		margin-bottom: 5em;
+		margin-top: auto;
+		align-content: center;
+		display: flex;
+		grid-column: 2;
+		grid-row: 1;
+	}
+	.map {
+		z-index: 1;
+		grid-column: 1 / 3;
+		grid-row: 1;
 	}
 
 	.buttons {
@@ -98,13 +158,19 @@
 	}
 	.menu {
 		background-color: #3e4a5c;
-		max-height: 10em;
 		flex-shrink: 1;
 		padding: 1em;
 	}
-	.map {
+	.mapContainer {
 		flex-grow: 1;
-		position: static;
-		position: relative;
+		display: grid;
+		grid-template-columns: 3, 1fr;
 	}
+	/* .correct { */
+	/* 	background-color: green; */
+	/* } */
+	/**/
+	/* .error { */
+	/* 	background-color: red; */
+	/* } */
 </style>

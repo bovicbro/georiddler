@@ -3,24 +3,24 @@ import { type Guess, type Riddle, type Area, isUserGuess, type UserGuess } from 
 
 
 export const GET: RequestHandler = ({ request }) => {
+  const random = Math.floor(Math.random() * testRiddles.length);
+  const randomRiddle = testRiddles[random];
   return json(
     {
-      riddle: testRiddles[0]
+      riddle: randomRiddle.riddle,
+      riddleId: randomRiddle.uuid,
     }
   )
 }
 
 export const POST: RequestHandler = async ({ request }) => {
   const body = await request.json();
-  console.log(body)
-
   if (isUserGuess(body.guess)) {
     const guess = joinUserGuess(body.guess, testRiddles);
     if (guess) {
       // if (!areaAccepted(guess)) {
       // return json({ "error": "Area too big" })
       // }
-      console.log(evaluateGuess(guess, guess.riddle))
       return json(evaluateGuess(guess, guess.riddle))
     }
   }
@@ -44,9 +44,7 @@ const evaluateGuess = (guess: Guess, riddle: Riddle): number => {
 }
 
 const answerInsideGuess = (guess: Guess, riddle: Riddle): boolean => {
-  console.log(guess.area.topLeft.lat, riddle.coordinates.lat, guess.area.bottomRight.lat)
-  console.log(guess.area.topLeft.long, riddle.coordinates.long, guess.area.bottomRight.long)
-  return guess.area.topLeft.lat <= riddle.coordinates.lat && riddle.coordinates.lat <= guess.area.bottomRight.lat
+  return guess.area.bottomRight.lat <= riddle.coordinates.lat && riddle.coordinates.lat <= guess.area.topLeft.lat
     && guess.area.topLeft.long <= riddle.coordinates.long && riddle.coordinates.long <= guess.area.bottomRight.long;
 }
 
@@ -65,10 +63,19 @@ const testRiddles: Riddle[] = [
   {
     uuid: "1",
     coordinates: {
-      long: 18.0686,
-      lat: 59.3293
+      long: 18.0670562,
+      lat: 59.3131176
     },
-    riddle: "A place on earth",
+    riddle: "Satsa pa soder",
+    points: 1,
+  },
+  {
+    uuid: "2",
+    coordinates: {
+      long: 10.65656,
+      lat: 57.74676
+    },
+    riddle: "Tip of the dane",
     points: 1,
   }
 ]
