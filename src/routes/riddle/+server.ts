@@ -21,7 +21,10 @@ export const POST: RequestHandler = async ({ request }) => {
       // if (!areaAccepted(guess)) {
       // return json({ "error": "Area too big" })
       // }
-      return json(evaluateGuess(guess, guess.riddle))
+      if (evaluateGuess(guess, guess.riddle) > 0) {
+        return json({ score: evaluateGuess(guess, guess.riddle), coordinates: guess.riddle.coordinates })
+      }
+      return json({ score: evaluateGuess(guess, guess.riddle) })
     }
   }
   return json({ "error": "Wrong type or id" })

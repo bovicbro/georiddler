@@ -1,4 +1,10 @@
 
+export type Mark = {
+  coordinates: Coordinates;
+  title: string;
+  text: string;
+}
+
 export type Coordinates = {
   lat: number;
   long: number;
@@ -38,3 +44,5 @@ export type Riddle = {
   points: number;
   uuid: string;
 }
+
+

@@ -1,21 +1,51 @@
 <script lang="ts">
 	import LeafletMap from '$lib/LeafletMap.svelte';
 	import Button from '../components/Button.svelte';
-	import type { Area, UserGuess } from './gameTypes';
+	import type { Area, Mark, UserGuess } from './gameTypes';
 	import { createUserGuess } from './gameTypes';
 	import { fade } from 'svelte/transition';
+	import { onMount } from 'svelte';
+	import { markers } from '../store';
 
-	const resetStatus = () => {
+	const addMarker = (mark: Mark) => {
+		markers.update((prev) => [...prev, mark]);
+	};
+
+	type State = {
+		riddle: string | undefined;
+		riddleId: string | undefined;
+		guessedCorrect: boolean;
+		numberOfGuesses: number;
+		showInstructions: boolean;
+	};
+
+	const updateState = (state: State): State => {
 		return {
+			riddle: state.riddle,
+			riddleId: state.riddleId,
+			guessedCorrect: state.guessedCorrect,
+			numberOfGuesses: state.numberOfGuesses,
+			showInstructions: state.showInstructions
+		};
+	};
+
+	let state: State = {
+		riddle: undefined,
+		riddleId: undefined,
+		guessedCorrect: false,
+		numberOfGuesses: 0,
+		showInstructions: false
+	};
+
+	const resetState = () => {
+		state = updateState({
 			riddle: undefined,
 			riddleId: undefined,
 			guessedCorrect: false,
 			numberOfGuesses: 0,
-			showInstructions: false
-		};
+			showInstructions: state.showInstructions
+		});
 	};
-
-	let status = resetStatus();
 
 	let map: LeafletMap;
 	let zoomlevel = 0;
@@ -47,10 +77,10 @@
 	};
 
 	const toggleInstructions = () => {
-		if (status.showInstructions) {
-			status.showInstructions = false;
+		if (state.showInstructions) {
+			state.showInstructions = false;
 		} else {
-			status.showInstructions = true;
+			state.showInstructions = true;
 		}
 	};
 
@@ -63,26 +93,36 @@
 			body: JSON.stringify({ guess: userGuess })
 		});
 		const result = await response.json();
-		status.numberOfGuesses++;
-		if (result === 1) {
-			status.guessedCorrect = true;
+		state.numberOfGuesses++;
+		console.log(result.score);
+		if (result.score === 1) {
+			state.guessedCorrect = true;
+			addMarker({
+				coordinates: { lat: result.coordinates.lat, long: result.coordinates.long },
+				text: 'hello',
+				title: 'hello'
+			});
 		} else {
-			status.guessedCorrect = false;
+			state.guessedCorrect = false;
 		}
 	};
 
 	const getCurrentUserGuest = (): UserGuess => {
-		if (status.riddleId === undefined) throw new Error('riddleId is undefined');
-		return createUserGuess(area, status.riddleId) as UserGuess;
+		if (state.riddleId === undefined) throw new Error('riddleId is undefined');
+		return createUserGuess(area, state.riddleId) as UserGuess;
 	};
 
 	const getRiddle = async () => {
 		const response = await fetch('/riddle');
 		const result = await response.json();
-		status = resetStatus();
-		status.riddle = result.riddle;
-		status.riddleId = result.riddleId;
+		resetState();
+		state.riddle = result.riddle;
+		state.riddleId = result.riddleId;
 	};
+
+	onMount(() => {
+		getRiddle();
+	});
 </script>
 
 <svelte:head>
@@ -92,18 +132,19 @@
 <section>
 	<div class="container">
 		<div class="menu">
-			{#if status.showInstructions}
+			{#if state.showInstructions}
 				<p>
 					Instructions: You get a riddle, the answer to the riddle is a place on earth. Locate the
 					place so that it is inside your current view of the map an click "Guess". If the answer to
 					the riddle is inside your view port, you get a point. Zoom in to make a guess!
+					{$markers.length}
 				</p>
 			{/if}
-			{#if status.riddle}
-				<p>Riddle: {status.riddle}</p>
+			{#if state.riddle}
+				<p>Riddle: {state.riddle}</p>
 			{/if}
-			{#if status.numberOfGuesses > 0}
-				{#if status.guessedCorrect === true}
+			{#if state.numberOfGuesses > 0}
+				{#if state.guessedCorrect === true}
 					<p class="correct">✅ Correct!</p>
 				{:else}
 					<p class="error">❌ Incorrect!</p>
@@ -118,7 +159,7 @@
 			</div>
 		</div>
 		<div class="mapContainer">
-			{#if allowedZoom(zoomlevel) === 'true' && !status.guessedCorrect}
+			{#if allowedZoom(zoomlevel) === 'true' && !state.guessedCorrect}
 				<div transition:fade={{ duration: 250 }} class="mapGridContent overlapButton">
 					<Button big={true} text="Guess" click={() => submitGuess(getCurrentUserGuest())} />
 				</div>

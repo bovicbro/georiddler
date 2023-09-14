@@ -1,13 +1,15 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, beforeUpdate, afterUpdate } from 'svelte';
 	import { browser } from '$app/environment';
-	import type { Area } from '../routes/gameTypes';
+	import type { Area, Mark } from '../routes/gameTypes';
+	import { markers } from '../store';
 
 	let mapElement: HTMLElement;
+	//@ts-ignore
+	let map;
 
 	export let setZoom: (zoom: number) => void;
 	export let updateArea: (area: Area) => void;
-	export let setMarker: (lat: number, long: number, text: string) => void;
 
 	onMount(async () => {
 		let map: L.Map;
@@ -36,10 +38,11 @@
 
 			leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-			setMarker = (lat: number, long: number, text: string) => {
-				leaflet.marker([lat, long]).addTo(map).bindPopup(text).openPopup();
-				map.setView([lat, long]);
-			};
+			markers.subscribe((markers) => {
+				markers.forEach((m) => {
+					leaflet.marker([m.coordinates.lat, m.coordinates.long]).addTo(map);
+				});
+			});
 		}
 	});
 </script>
