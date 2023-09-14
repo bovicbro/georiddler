@@ -131,30 +131,31 @@
 <section>
 	<div class="container">
 		<div class="menu">
-			{#if state.showInstructions}
-				<p>
-					Instructions: You get a riddle, the answer to the riddle is a place on earth. Locate the
-					place so that it is inside your current view of the map an click "Guess". If the answer to
-					the riddle is inside your view port, you get a point. Zoom in to make a guess!
-					{$markers.length}
-				</p>
-			{/if}
-			{#if state.riddle}
-				<p>Riddle: {state.riddle}</p>
-			{/if}
-			{#if state.numberOfGuesses > 0}
-				{#if state.guessedCorrect === true}
-					<p class="correct">✅ Correct!</p>
-				{:else}
-					<p class="error">❌ Incorrect!</p>
+			<div class="menu-content">
+				{#if state.showInstructions}
+					<p>
+						You get a riddle, the answer to the riddle is a place on earth. Locate the place so that
+						it is inside your current view of the map an click "Guess". If the answer to the riddle
+						is inside your view port, you get a point. Zoom in to make a guess!
+						{$markers.length}
+					</p>
 				{/if}
-			{:else}
-				<p />
-			{/if}
-
-			<div class="buttons">
-				<Button text="New riddle" click={getRiddle} />
-				<Button text="Instructions" click={() => toggleInstructions()} />
+				{#if state.riddle}
+					<p>{state.riddle}</p>
+				{/if}
+				<div class="buttons">
+					<Button text="New riddle" click={getRiddle} />
+					<Button text="Instructions" click={() => toggleInstructions()} />
+				</div>
+				{#if state.numberOfGuesses > 0}
+					{#if state.guessedCorrect === true}
+						<p class="correct">✅ Correct!</p>
+					{:else}
+						<p class="error">❌ Incorrect!</p>
+					{/if}
+				{:else}
+					<p />
+				{/if}
 			</div>
 		</div>
 		<div class="mapContainer">
@@ -206,7 +207,17 @@
 	.menu {
 		background-color: #3e4a5c;
 		flex-shrink: 1;
+		display: flex;
+		justify-content: center;
+		min-height: 12em;
 	}
+	.menu-content {
+		max-width: 40em;
+		dispaly: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
 	.mapContainer {
 		flex-grow: 1;
 		display: grid;
