@@ -38,9 +38,16 @@
 
 			leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
+			const icon = leaflet.icon({
+				iconUrl: 'marker.png',
+				iconSize: [50, 50], // size of the icon
+				iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+				popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+			});
+
 			markers.subscribe((markers) => {
 				markers.forEach((m) => {
-					leaflet.marker([m.coordinates.lat, m.coordinates.long]).addTo(map);
+					leaflet.marker([m.coordinates.lat, m.coordinates.long], { icon: icon }).addTo(map);
 				});
 			});
 		}
