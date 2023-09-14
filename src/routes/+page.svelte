@@ -7,8 +7,8 @@
 
 	const resetStatus = () => {
 		return {
-			riddle: '',
-			riddleId: '',
+			riddle: undefined,
+			riddleId: undefined,
 			guessedCorrect: false,
 			numberOfGuesses: 0,
 			showInstructions: false
@@ -39,7 +39,7 @@
 	};
 
 	const allowedZoom = (zoomlevel: number) => {
-		if (zoomlevel > 14) {
+		if (zoomlevel > 13) {
 			return 'true';
 		} else {
 			return 'false';
@@ -72,6 +72,7 @@
 	};
 
 	const getCurrentUserGuest = (): UserGuess => {
+		if (status.riddleId === undefined) throw new Error('riddleId is undefined');
 		return createUserGuess(area, status.riddleId) as UserGuess;
 	};
 
@@ -95,24 +96,29 @@
 				<p>
 					Instructions: You get a riddle, the answer to the riddle is a place on earth. Locate the
 					place so that it is inside your current view of the map an click "Guess". If the answer to
-					the riddle is inside your view port, you get a point.
+					the riddle is inside your view port, you get a point. Zoom in to make a guess!
 				</p>
 			{/if}
-			<p>Riddle: {status.riddle}</p>
+			{#if status.riddle}
+				<p>Riddle: {status.riddle}</p>
+			{/if}
 			{#if status.numberOfGuesses > 0}
 				{#if status.guessedCorrect === true}
 					<p class="correct">✅ Correct!</p>
 				{:else}
 					<p class="error">❌ Incorrect!</p>
 				{/if}
+			{:else}
+				<p />
 			{/if}
+
 			<div class="buttons">
 				<Button text="New riddle" click={getRiddle} />
 				<Button text="Instructions" click={() => toggleInstructions()} />
 			</div>
 		</div>
 		<div class="mapContainer">
-			{#if allowedZoom(zoomlevel) === 'true'}
+			{#if allowedZoom(zoomlevel) === 'true' && !status.guessedCorrect}
 				<div transition:fade={{ duration: 250 }} class="mapGridContent overlapButton">
 					<Button big={true} text="Guess" click={() => submitGuess(getCurrentUserGuest())} />
 				</div>
@@ -148,6 +154,7 @@
 		flex-direction: row;
 		justify-content: center;
 		gap: 1em;
+		margin: 1em;
 	}
 	.container {
 		height: 100vh;
@@ -159,18 +166,10 @@
 	.menu {
 		background-color: #3e4a5c;
 		flex-shrink: 1;
-		padding: 1em;
 	}
 	.mapContainer {
 		flex-grow: 1;
 		display: grid;
 		grid-template-columns: 3, 1fr;
 	}
-	/* .correct { */
-	/* 	background-color: green; */
-	/* } */
-	/**/
-	/* .error { */
-	/* 	background-color: red; */
-	/* } */
 </style>

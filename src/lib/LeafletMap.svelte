@@ -7,6 +7,7 @@
 
 	export let setZoom: (zoom: number) => void;
 	export let updateArea: (area: Area) => void;
+	export let setMarker: (lat: number, long: number, text: string) => void;
 
 	onMount(async () => {
 		let map: L.Map;
@@ -35,11 +36,10 @@
 
 			leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-			// leaflet
-			// 	.marker([51.5, -0.09])
-			// 	.addTo(map)
-			// 	.bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-			// 	.openPopup();
+			setMarker = (lat: number, long: number, text: string) => {
+				leaflet.marker([lat, long]).addTo(map).bindPopup(text).openPopup();
+				map.setView([lat, long]);
+			};
 		}
 	});
 </script>

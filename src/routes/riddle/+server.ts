@@ -1,4 +1,4 @@
-import { json, type RequestHandler } from "@sveltejs/kit";
+import { HttpError_1, json, type RequestHandler } from "@sveltejs/kit";
 import { type Guess, type Riddle, type Area, isUserGuess, type UserGuess } from "../gameTypes";
 
 
@@ -58,7 +58,6 @@ const calcualteArea = (area: Area): number => {
   const height = area.bottomRight.lat - area.topLeft.lat;
   return width * height;
 }
-
 const testRiddles: Riddle[] = [
   {
     uuid: "1",

@@ -18,13 +18,25 @@
 		background-color: #cdd3dc;
 		transition: 0.1s;
 	}
+
 	.big {
-		background-color: #7ab4d1;
+		background-color: #ffcc99;
 		font-size: 2em;
 		border-style: solid;
-		border-width: 2px;
-		border-color: #7ab4d1;
+		border-width: 5px;
+		border-color: #ff901f;
 		box-shadow: 0px 0px 0px 2px #cdd3dc;
+	}
+
+	.big button:hover {
+		background-color: #a35200;
+		cursor: pointer;
+	}
+
+	.big button:active {
+		cursor: click;
+		transition: 0s;
+		background-color: #7fa1d3;
 	}
 
 	button:hover {
