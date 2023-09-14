@@ -1,4 +1,4 @@
-import { HttpError_1, json, type RequestHandler } from "@sveltejs/kit";
+import { json, type RequestHandler } from "@sveltejs/kit";
 import { type Guess, type Riddle, type Area, isUserGuess, type UserGuess } from "../gameTypes";
 
 
@@ -40,7 +40,7 @@ const joinUserGuess = (guess: UserGuess, riddles: Riddle[]): Guess | undefined =
   } else {
     undefined
   }
-}
+};
 
 const evaluateGuess = (guess: Guess, riddle: Riddle): number => {
   return answerInsideGuess(guess, riddle) ? riddle.points : 0;
@@ -68,7 +68,7 @@ const testRiddles: Riddle[] = [
       long: 18.0670562,
       lat: 59.3131176
     },
-    riddle: "Satsa pa soder",
+    riddle: "Hipsters galore where kisarna used to carry knives",
     points: 1,
   },
   {
@@ -79,5 +79,94 @@ const testRiddles: Riddle[] = [
     },
     riddle: "Tip of the dane",
     points: 1,
+  },
+  {
+    uuid: "3",
+    coordinates: {
+      long: 28.9784,
+      lat: 41.008
+    },
+    riddle: "I'm where East meets West, a city of grandeur and lore, Bridging two continents, a sight to explore. On the Bosphorus' banks, I stand tall and proud, Can you name the place where my secrets are endowed?",
+    points: 1,
+  }, {
+    uuid: "4",
+    coordinates: {
+      long: 12.33289,
+      lat: 45.43444
+    },
+    riddle: "In the city where spaghetti meets canals, I hide among the waterways and gondolas. Famous for masks and a carnival delight, Where am I located in the heart of the night?",
+    points: 1
+  }, {
+    uuid: "5",
+    coordinates: {
+      long: 31.13423,
+      lat: 29.97924
+    },
+    riddle: "Among the pyramids, I'm a desert's gem, An ancient wonder by the Nile's bend. Sphinx and pharaohs are my ancient kin, Can you guess the place I'm hidden in?",
+    points: 1
+  }, {
+    uuid: "6",
+    coordinates: {
+      long: 151.2093,
+      lat: -33.8688
+    },
+    riddle: "A land of kangaroos and endless plains wide, Down under, where nature's wonders bide. The Opera House stands by the sea's crest, Can you name the city where I'm at rest?",
+    points: 1
+  }, {
+    uuid: "7",
+    coordinates: {
+      long: -111.8353,
+      lat: 34.8697
+    },
+    riddle: "Between red rocks and canyons so deep, In the land of cowboys and dreams to keep. With cacti and deserts, I blend in just right, Can you guess the place where I hide out of sight?",
+    points: 1
+  }, {
+    uuid: "8",
+    coordinates: {
+      long: 139.6917,
+      lat: 35.6895
+    },
+    riddle: "On the island of samurais and cherry blossoms so fair, In a city where ancient temples are everywhere. Mount Fuji's view, a sight to adore, Can you name this city by the Pacific shore?",
+    points: 1
+  }, {
+    uuid: "9",
+    coordinates: {
+      long: -43.2075,
+      lat: -22.9083
+    },
+    riddle: "Where the Amazon flows through forests so grand, In a country with samba and beaches of sand. Christ the Redeemer stands tall above, What's the city I'm hinting of?",
+    points: 1
+  }, {
+    uuid: "10",
+    coordinates: {
+      long: 7.9086,
+      lat: 61.1591
+    },
+    riddle: "In a land of fjords and midnight sun's gleam, In the north, where the Northern Lights beam. Vikings once sailed these waters wide, Can you name the place where I do hide?",
+    points: 1
+  }, {
+    uuid: "11",
+    coordinates: {
+      long: 100.5018,
+      lat: 13.7563
+    },
+    riddle: "In a city where tuk-tuks roam the street, Among temples and street food so sweet. The Grand Palace and Wat Pho nearby, Can you guess the city where I lie?",
+    points: 1
+  }, {
+    uuid: "12",
+    coordinates: {
+      long: 131.0429,
+      lat: -25.3444
+    },
+    riddle: "Where the Outback stretches far and wide, Kangaroos and koalas by your side. Ayers Rock stands in the heart of the land, Can you tell me where I make my stand?",
+    points: 1
+  }, {
+    uuid: "13",
+    coordinates: {
+      long: 79.9558,
+      lat: 6.9271
+    },
+    riddle: "On an island nation in the Indian Ocean blue, With beaches and tea plantations, a stunning view. Among elephants and spice gardens galore, Can you name the city I'm hidden in for sure?",
+    points: 1
   }
 ]

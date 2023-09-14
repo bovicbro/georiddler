@@ -94,7 +94,6 @@
 		});
 		const result = await response.json();
 		state.numberOfGuesses++;
-		console.log(result.score);
 		if (result.score === 1) {
 			state.guessedCorrect = true;
 			addMarker({
