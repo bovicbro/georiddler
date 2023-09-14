@@ -168,5 +168,75 @@ const testRiddles: Riddle[] = [
     },
     riddle: "On an island nation in the Indian Ocean blue, With beaches and tea plantations, a stunning view. Among elephants and spice gardens galore, Can you name the city I'm hidden in for sure?",
     points: 1
+  },
+
+  {
+    "uuid": "14",
+    "coordinates": {
+      "long": 4.8952,
+      "lat": 52.3792
+    },
+    "riddle": "In a city of bicycles, canals, and delight, I'm a museum where art takes flight. The Night Watch and Vermeer's pearl, What's the name of this cultural whirl?",
+    "points": 1
+  }
+  ,
+  {
+    "uuid": "15",
+    "coordinates": {
+      "long": 116.3972,
+      "lat": 39.9042
+    },
+    "riddle": "In a land of emperors and ancient might, I'm a palace complex shining bright. Forbidden to many for years of yore, What's the name of this place to explore?",
+    "points": 1
+  }
+  ,
+  {
+    "uuid": "16",
+    "coordinates": {
+      "long": -0.1276,
+      "lat": 51.5072
+    },
+    "riddle": "In the heart of a city that never sleeps, Big Ben's chime over the river sweeps. A famous square with pigeons and more, What's the name of this London's core?",
+    "points": 1
+  }
+  ,
+  {
+    "uuid": "17",
+    "coordinates": {
+      "long": 4.3517,
+      "lat": 50.8503
+    },
+    "riddle": "In a city of chocolates, waffles, and lace, A grand square with history's embrace. Atomium gleams, and comics take flight, What's the name of this Belgian delight?",
+    "points": 1
+  }
+  ,
+  {
+    "uuid": "18",
+    "coordinates": {
+      "long": 2.2945,
+      "lat": 48.8588
+    },
+    "riddle": "On the river Seine's gentle flow, A tower stands tall in the city's glow. An iron lady with a view so divine, What's the name of this landmark of design?",
+    "points": 1
+  }
+  ,
+  {
+    "uuid": "19",
+    "coordinates": {
+      "long": 151.2093,
+      "lat": -33.8688
+    },
+    "riddle": "On an island of samurais and cherry blossoms so fair, In a city where ancient temples are everywhere. Mount Fuji's view, a sight to adore, Can you name this city by the Pacific shore?",
+    "points": 1
+  }
+  ,
+  {
+    "uuid": "20",
+    "coordinates": {
+      "long": -74.0060,
+      "lat": 40.7128
+    },
+    "riddle": "In a city that never seems to tire, Skyscrapers reach ever higher. Lady Liberty with her torch so bright, What's the name of this American site?",
+    "points": 1
   }
 ]
