@@ -17,12 +17,12 @@
 			const currentArea = () => {
 				return {
 					topLeft: {
-						lat: map.getBounds().getNorthWest().lat,
-						long: map.getBounds().getNorthWest().lng
+						lat: map.getBounds().getNorthWest().wrap().lat,
+						long: map.getBounds().getNorthWest().wrap().lng
 					},
 					bottomRight: {
-						lat: map.getBounds().getSouthEast().lat,
-						long: map.getBounds().getSouthEast().lng
+						lat: map.getBounds().getSouthEast().wrap().lat,
+						long: map.getBounds().getSouthEast().wrap().lng
 					}
 				};
 			};

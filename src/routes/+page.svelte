@@ -6,47 +6,14 @@
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { markers } from '../store';
+	import { resetState, getInitialState, type State } from '$lib/game/game';
+	import { toggleInstructions } from '$lib/game/ui';
 
 	const addMarker = (mark: Mark) => {
 		markers.update((prev) => [...prev, mark]);
 	};
 
-	type State = {
-		riddle: string | undefined;
-		riddleId: string | undefined;
-		guessedCorrect: boolean;
-		numberOfGuesses: number;
-		showInstructions: boolean;
-	};
-
-	const updateState = (state: State): State => {
-		return {
-			riddle: state.riddle,
-			riddleId: state.riddleId,
-			guessedCorrect: state.guessedCorrect,
-			numberOfGuesses: state.numberOfGuesses,
-			showInstructions: state.showInstructions
-		};
-	};
-
-	let state: State = {
-		riddle: undefined,
-		riddleId: undefined,
-		guessedCorrect: false,
-		numberOfGuesses: 0,
-		showInstructions: false
-	};
-
-	const resetState = () => {
-		state = updateState({
-			riddle: undefined,
-			riddleId: undefined,
-			guessedCorrect: false,
-			numberOfGuesses: 0,
-			showInstructions: state.showInstructions
-		});
-	};
-
+	let state: State = getInitialState();
 	let map: LeafletMap;
 	let zoomlevel = 0;
 	let area: Area = {
@@ -76,14 +43,6 @@
 		}
 	};
 
-	const toggleInstructions = () => {
-		if (state.showInstructions) {
-			state.showInstructions = false;
-		} else {
-			state.showInstructions = true;
-		}
-	};
-
 	const submitGuess = async (userGuess: UserGuess) => {
 		const response = await fetch('/riddle', {
 			method: 'POST',
@@ -92,6 +51,7 @@
 			},
 			body: JSON.stringify({ guess: userGuess })
 		});
+
 		const result = await response.json();
 		state.numberOfGuesses++;
 		if (result.score === 1) {
@@ -114,7 +74,7 @@
 	const getRiddle = async () => {
 		const response = await fetch('/riddle');
 		const result = await response.json();
-		resetState();
+		state = resetState(state);
 		state.riddle = result.riddle;
 		state.riddleId = result.riddleId;
 	};
@@ -145,7 +105,7 @@
 				{/if}
 				<div class="buttons">
 					<Button text="New riddle" click={getRiddle} />
-					<Button text="Instructions" click={() => toggleInstructions()} />
+					<Button text="Instructions" click={() => (state = toggleInstructions(state))} />
 				</div>
 				{#if state.numberOfGuesses > 0}
 					{#if state.guessedCorrect === true}
